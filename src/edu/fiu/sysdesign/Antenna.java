@@ -3,7 +3,7 @@
  */
 package edu.fiu.sysdesign;
 
-import java.util.List;
+import java.util.Random;
 
 /**
  * @author Olga
@@ -32,10 +32,22 @@ public class Antenna implements SelfCheckCapable
 	 * @param lsOfCommands
 	 * @return
 	 */
-	public String receiveData(List<Command> lsOfCommands)
+	public boolean receiveData()
 	{
-		String data = "";
-		return data;
+		System.out.println("Antenna trying to receive command..");
+		delay(1500);
+		if (receivedOrNot())
+		{
+			System.out.println("Received command successfully! Please wait while its processed.\n");
+			delay(1500);
+			return true;
+		}
+		else
+		{
+			System.out.println("Not able to receive command due to unknown issues. Perform a system check!\n");
+			delay(1500);
+			return false;
+		}
 	}
 
 	@Override
@@ -57,6 +69,22 @@ public class Antenna implements SelfCheckCapable
 	{
 		// TODO Auto-generated method stub
 		return SelfCheckUtils.basicSelfCheckRunner(this);
+	}
+	
+	public boolean receivedOrNot()
+	{
+		Random rand = new Random();
+		return rand.nextBoolean();
+	}
+	
+	public static void delay(int ms)
+	{
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

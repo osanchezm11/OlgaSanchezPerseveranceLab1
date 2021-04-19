@@ -13,6 +13,7 @@ public class Engineer
 	String position;
 	int age;
 	String department;
+	Command command;
 	
 	/**
 	 * This method will be used to issue a command to a rover.
@@ -21,8 +22,19 @@ public class Engineer
 	 * @param rover
 	 * @return
 	 */
-	public boolean issueCommand(Command command, Rover rover)
+	
+	public Engineer(String name, Command command)
 	{
+		this.name = name;
+		this.command = command;
+	}
+	
+	public boolean issueCommand()
+	{
+		command.description = "Move Perseverance to Location X";
+		System.out.println("Engineer " + name + " has issued a Command...");
+		System.out.println("Command Description: " + command.description);
+		delay(1500);
 		return true;		
 	}
 	
@@ -34,5 +46,15 @@ public class Engineer
 	{
 		String analysis = "";
 		return analysis;
+	}
+	
+	public static void delay(int ms)
+	{
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

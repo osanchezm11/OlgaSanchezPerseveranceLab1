@@ -28,6 +28,12 @@ public class Cpu
 		
 	}
 	
+	public boolean activateNavigationSystem()
+	{
+		System.out.println("Activating navigation systems...\n");
+		return true;
+	}
+	
 	/**
 	 * This method will take a Command as input
 	 * and process it.
@@ -38,6 +44,7 @@ public class Cpu
 	 */
 	public boolean processCommand(Command command)
 	{
+		System.out.println("Processing Command...\n");
 		return true;
 	}
 }

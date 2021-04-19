@@ -24,6 +24,7 @@ public class Rover
 	 */
 	public boolean powerOn()
 	{
+		System.out.println("Rover powering on...");
 		return true;
 	}
 	
@@ -34,6 +35,7 @@ public class Rover
 	 */
 	public boolean powerOff()
 	{
+		System.out.println("Task completed successfully! Rover powering off...");
 		return true;
 	}
 	
@@ -42,11 +44,85 @@ public class Rover
 	 */
 	public static void main(String[] args) 
 	{
-		// TODO Auto-generated method stub
-		Camera imagingCamera = new Camera();
-		imagingCamera.runSelfCheck();
+		Rover rover = new Rover();
+		Command command = new Command();
+		Cpu cpu = new Cpu();
+		NavigationSystem navigationSystem = new NavigationSystem();
+		Wheel wheel = new Wheel();
+		Antenna antenna = new Antenna();
+		Camera camera = new Camera();
 		
-		Antenna uhf = new Antenna();
-		uhf.runSelfCheck();
+		PerformPrimaryTask(command);
+		System.out.println("");
+		
+		
+		boolean isReceived = antenna.receiveData();
+		if (isReceived)
+		{
+			PerformSecondaryTask(command, rover, 
+				 navigationSystem, wheel, cpu, camera);
+		}
+		else
+		{
+			boolean isAntennaWorking = antenna.runSelfCheck();
+			if (isAntennaWorking)
+			{
+				PerformSecondaryTask(command, rover, 
+						 navigationSystem, wheel, cpu, camera);
+			}
+			else
+			{
+				System.out.println("Unexpected error occurred. Please perform a hard reset!");
+			}
+		}
+	}
+	
+	public static void PerformPrimaryTask(Command command)
+	{	
+		Engineer engineer = new Engineer("Olga Sanchez", command);
+		engineer.issueCommand();
+	}
+	
+	public static void PerformSecondaryTask(Command command, Rover rover, 
+			NavigationSystem navigationSystem, Wheel wheel, Cpu cpu, Camera camera)
+	{
+		PerformHappyPath(command, rover, navigationSystem, wheel, cpu);
+		Photo photo = camera.takePhoto();
+		PerformNotSoHappyPath(rover, navigationSystem, camera, photo, wheel);
+	}
+	
+	public static void PerformHappyPath(Command command, Rover rover, 
+			NavigationSystem navigationSystem, Wheel wheel, Cpu cpu)
+	{
+		
+		cpu.processCommand(command);		
+		rover.powerOn();
+		cpu.activateNavigationSystem();		
+		navigationSystem.calculateRoute();		
+		wheel.moveForward(5);
+	}
+	
+	public static void PerformNotSoHappyPath(Rover rover, NavigationSystem navigationSystem, 
+			Camera camera, Photo photo, Wheel wheel)
+	{
+		boolean repeat = false;
+		do
+		{
+			repeat = camera.checkForObstacle(photo);
+			if (repeat)
+				wheel.avoidObstacle();
+		}
+		while(repeat);
+		rover.powerOff();
+	}
+	
+	public static void delay(int ms)
+	{
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
